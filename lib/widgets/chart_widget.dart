@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../animation/chart_animation.dart';
 import '../utils/bluetooth_connection.dart';
-import '../utils/chart_list_of_values.dart';
+import '../utils/check_permission.dart';
 
 class PulseChart extends StatefulWidget {
   const PulseChart({super.key});
@@ -18,18 +18,19 @@ class _PulseChartState extends State<PulseChart>{
   @override
   void initState() {
     super.initState();
+    checkPermissions();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      bleService = BleService(onNewData: updateValues, targetDeviceName: "MyESP32");
-      bleService.start();
+      bleService = BleService(onNewData: updateValues, targetDeviceName: "MacBook Air — Степан");
+      bleService.startScan();
     });
   }
 
   void updateValues(List<double> newValues) {
     setState(() {
-      values.addAll(newValues);
       if (values.length > 100) {
-        values.removeAt(0);
+        values = [];
       }
+      values.addAll(newValues);
     });
   }
 
